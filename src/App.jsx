@@ -10,6 +10,7 @@ function App() {
       <div>
         {/* 🔹 Barra de navegación */}
         <nav style={{ marginBottom: "1rem" }}>
+          <Link to="/" style={{ marginRight: "1rem" }}>Inicio</Link>
           <Link to="/clientes" style={{ marginRight: "1rem" }}>Clientes</Link>
           <Link to="/tatuadores" style={{ marginRight: "1rem" }}>Tatuadores</Link>
           <Link to="/citas" style={{ marginRight: "1rem" }}>Citas</Link>
@@ -18,10 +19,7 @@ function App() {
 
         {/* 🔹 Rutas principales */}
         <Routes>
-          {/* Ruta raíz */}
-          <Route path="/" element={<Clientes />} />
-
-          {/* Otras rutas */}
+          <Route path="/" element={<Clientes />} /> {/* ✅ Ruta raíz */}
           <Route path="/clientes" element={<Clientes />} />
           <Route path="/tatuadores" element={<Tatuadores />} />
           <Route path="/citas" element={<Citas />} />
@@ -33,3 +31,4 @@ function App() {
 }
 
 export default App;
+
