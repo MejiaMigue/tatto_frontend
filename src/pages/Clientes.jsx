@@ -6,7 +6,7 @@ import tattooBg from "../assets/tattoo-bg.jpg";
 function Clientes() {
   const [clientes, setClientes] = useState([]);
   const [formData, setFormData] = useState({ nombre: "", email: "" });
-  const [editId, setEditId] = useState(null); // 🔹 nuevo estado para edición
+  const [editId, setEditId] = useState(null);
 
   useEffect(() => {
     cargarClientes();
@@ -14,7 +14,11 @@ function Clientes() {
 
   const cargarClientes = () => {
     API.get("/api/clientes")
-      .then((res) => setClientes(res.data))
+      .then((res) => {
+        const data = res.data;
+        // 🔹 Aseguramos que siempre sea un array
+        setClientes(Array.isArray(data) ? data : []);
+      })
       .catch((err) => console.error("Error cargando clientes:", err));
   };
 
@@ -112,17 +116,23 @@ function Clientes() {
           </tr>
         </thead>
         <tbody>
-          {clientes.map((c) => (
-            <tr key={c.id}>
-              <td>{c.id}</td>
-              <td>{c.nombre}</td>
-              <td>{c.email}</td>
-              <td>
-                <button onClick={() => editarCliente(c)}>Editar</button>
-                <button onClick={() => eliminarCliente(c.id)}>Eliminar</button>
-              </td>
+          {Array.isArray(clientes) && clientes.length > 0 ? (
+            clientes.map((c) => (
+              <tr key={c.id}>
+                <td>{c.id}</td>
+                <td>{c.nombre}</td>
+                <td>{c.email}</td>
+                <td>
+                  <button onClick={() => editarCliente(c)}>Editar</button>
+                  <button onClick={() => eliminarCliente(c.id)}>Eliminar</button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="4">No hay clientes registrados</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
