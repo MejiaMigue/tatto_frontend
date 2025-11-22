@@ -18,6 +18,10 @@ function App() {
 
         {/* 🔹 Rutas principales */}
         <Routes>
+          {/* Ruta raíz */}
+          <Route path="/" element={<Clientes />} />
+
+          {/* Otras rutas */}
           <Route path="/clientes" element={<Clientes />} />
           <Route path="/tatuadores" element={<Tatuadores />} />
           <Route path="/citas" element={<Citas />} />
