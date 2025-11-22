@@ -1,0 +1,84 @@
+/* Fondo general con imagen */
+.clientes-container {
+  min-height: 100vh;
+  background-position: center;
+  padding: 2rem;
+  color: #f5f5f5;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Título */
+.clientes-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  letter-spacing: 2px;
+  color: #fff;
+}
+
+/* Formulario */
+.clientes-form {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.clientes-form input {
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  border: none;
+  border-radius: 4px;
+}
+
+.clientes-form button {
+  background-color: #111;
+  color: #f5f5f5;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.clientes-form button:hover {
+  background-color: #444;
+}
+
+/* Tabla */
+.clientes-table {
+  width: 80%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.clientes-table th,
+.clientes-table td {
+  padding: 0.8rem;
+  text-align: center;
+  border-bottom: 1px solid #333;
+}
+
+.clientes-table th {
+  background-color: #222;
+  color: #f5f5f5;
+}
+
+.clientes-table tr:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.clientes-table button {
+  background-color: #c0392b;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.clientes-table button:hover {
+  background-color: #e74c3c;
+}
