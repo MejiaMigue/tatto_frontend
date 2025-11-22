@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+// Usa la URL de Railway en producción
+const baseUrl =
+  process.env.REACT_APP_API_URL || "https://web-production-bd168.up.railway.app";
 
 const API = axios.create({
   baseURL: baseUrl,
