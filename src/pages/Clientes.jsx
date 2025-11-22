@@ -13,10 +13,9 @@ function Clientes() {
   }, []);
 
   const cargarClientes = () => {
-    API.get("/api/clientes")
+    API.get("/api/clientes/") // 🔹 slash final
       .then((res) => {
         const data = res.data;
-        // 🔹 Aseguramos que siempre sea un array
         setClientes(Array.isArray(data) ? data : []);
       })
       .catch((err) => console.error("Error cargando clientes:", err));
@@ -30,7 +29,6 @@ function Clientes() {
     e.preventDefault();
 
     if (editId) {
-      // 🔹 Update
       API.put(`/api/clientes/${editId}`, formData)
         .then(() => {
           setFormData({ nombre: "", email: "" });
@@ -39,8 +37,7 @@ function Clientes() {
         })
         .catch((err) => console.error("Error actualizando cliente:", err));
     } else {
-      // 🔹 Create
-      API.post("/api/clientes", formData)
+      API.post("/api/clientes/", formData) // 🔹 slash final
         .then(() => {
           setFormData({ nombre: "", email: "" });
           cargarClientes();

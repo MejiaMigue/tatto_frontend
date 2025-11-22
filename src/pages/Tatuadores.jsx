@@ -13,8 +13,11 @@ function Tatuadores() {
   }, []);
 
   const cargarTatuadores = () => {
-    API.get("/api/tatuadores")
-      .then((res) => setTatuadores(res.data))
+    API.get("/api/tatuadores/") // 🔹 slash final
+      .then((res) => {
+        const data = res.data;
+        setTatuadores(Array.isArray(data) ? data : []);
+      })
       .catch((err) => console.error("Error cargando tatuadores:", err));
   };
 
@@ -26,7 +29,6 @@ function Tatuadores() {
     e.preventDefault();
 
     if (editId) {
-      // 🔹 Update
       API.put(`/api/tatuadores/${editId}`, formData)
         .then(() => {
           setFormData({ nombre: "", estilo: "" });
@@ -35,8 +37,7 @@ function Tatuadores() {
         })
         .catch((err) => console.error("Error actualizando tatuador:", err));
     } else {
-      // 🔹 Create
-      API.post("/api/tatuadores", formData)
+      API.post("/api/tatuadores/", formData) // 🔹 slash final
         .then(() => {
           setFormData({ nombre: "", estilo: "" });
           cargarTatuadores();
@@ -112,17 +113,23 @@ function Tatuadores() {
           </tr>
         </thead>
         <tbody>
-          {tatuadores.map((t) => (
-            <tr key={t.id}>
-              <td>{t.id}</td>
-              <td>{t.nombre}</td>
-              <td>{t.estilo}</td>
-              <td>
-                <button onClick={() => editarTatuador(t)}>Editar</button>
-                <button onClick={() => eliminarTatuador(t.id)}>Eliminar</button>
-              </td>
+          {Array.isArray(tatuadores) && tatuadores.length > 0 ? (
+            tatuadores.map((t) => (
+              <tr key={t.id}>
+                <td>{t.id}</td>
+                <td>{t.nombre}</td>
+                <td>{t.estilo}</td>
+                <td>
+                  <button onClick={() => editarTatuador(t)}>Editar</button>
+                  <button onClick={() => eliminarTatuador(t.id)}>Eliminar</button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="4">No hay tatuadores registrados</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
@@ -130,4 +137,5 @@ function Tatuadores() {
 }
 
 export default Tatuadores;
+
 

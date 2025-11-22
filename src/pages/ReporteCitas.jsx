@@ -23,23 +23,21 @@ function Reporte() {
   }, []);
 
   const cargarReporte = () => {
-    API.get("/api/citas/xml", { headers: { Accept: "application/xml" } })
+    API.get("/api/citas/xml/", { headers: { Accept: "application/xml" } }) // 🔹 slash final
       .then((res) => {
-        // Parsear XML a objeto JS
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(res.data, "application/xml");
 
-        const totalGeneral = xmlDoc
-          .getElementsByTagName("total_general")[0]
-          .textContent;
+        const totalGeneralNode = xmlDoc.getElementsByTagName("total_general")[0];
+        const totalGeneral = totalGeneralNode ? totalGeneralNode.textContent : "0";
 
         const tatuadoresNodes = xmlDoc.getElementsByTagName("tatuador");
         const tatuadores = Array.from(tatuadoresNodes).map((t) => ({
           id: t.getAttribute("id"),
           nombre: t.getAttribute("nombre"),
           estilo: t.getAttribute("estilo"),
-          total_citas: t.getElementsByTagName("total_citas")[0].textContent,
-          porcentaje: t.getElementsByTagName("porcentaje")[0].textContent,
+          total_citas: t.getElementsByTagName("total_citas")[0]?.textContent || "0",
+          porcentaje: t.getElementsByTagName("porcentaje")[0]?.textContent || "0%",
         }));
 
         setReporte({ totalGeneral, tatuadores });
@@ -75,63 +73,71 @@ function Reporte() {
               </tr>
             </thead>
             <tbody>
-              {reporte.tatuadores.map((t) => (
-                <tr key={t.id}>
-                  <td>{t.id}</td>
-                  <td>{t.nombre}</td>
-                  <td>{t.estilo}</td>
-                  <td>{t.total_citas}</td>
-                  <td>{t.porcentaje}</td>
+              {Array.isArray(reporte.tatuadores) && reporte.tatuadores.length > 0 ? (
+                reporte.tatuadores.map((t) => (
+                  <tr key={t.id}>
+                    <td>{t.id}</td>
+                    <td>{t.nombre}</td>
+                    <td>{t.estilo}</td>
+                    <td>{t.total_citas}</td>
+                    <td>{t.porcentaje}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5">No hay datos de tatuadores</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
 
           {/* Gráfico de barras */}
-          <div style={{ maxWidth: "600px", margin: "40px auto" }}>
-            <Bar
-              data={{
-                labels: reporte.tatuadores.map((t) => t.nombre),
-                datasets: [
-                  {
-                    label: "% de citas",
-                    data: reporte.tatuadores.map((t) =>
-                      parseFloat(t.porcentaje.replace("%", ""))
-                    ),
-                    backgroundColor: "rgba(255, 99, 132, 0.6)",
-                    borderColor: "rgba(255, 99, 132, 1)",
-                    borderWidth: 1,
-                  },
-                ],
-              }}
-              options={{
-                responsive: true,
-                plugins: {
-                  legend: { display: false },
-                  tooltip: { callbacks: { label: (ctx) => `${ctx.raw}%` } },
-                  title: {
-                    display: true,
-                    text: "Porcentaje de citas por tatuador",
-                    color: "#fff",
-                  },
-                },
-                scales: {
-                  x: {
-                    ticks: { color: "#fff" },
-                    grid: { color: "rgba(255,255,255,0.1)" },
-                  },
-                  y: {
-                    beginAtZero: true,
-                    ticks: {
-                      color: "#fff",
-                      callback: (value) => `${value}%`,
+          {Array.isArray(reporte.tatuadores) && reporte.tatuadores.length > 0 && (
+            <div style={{ maxWidth: "600px", margin: "40px auto" }}>
+              <Bar
+                data={{
+                  labels: reporte.tatuadores.map((t) => t.nombre),
+                  datasets: [
+                    {
+                      label: "% de citas",
+                      data: reporte.tatuadores.map((t) =>
+                        parseFloat(t.porcentaje.replace("%", ""))
+                      ),
+                      backgroundColor: "rgba(255, 99, 132, 0.6)",
+                      borderColor: "rgba(255, 99, 132, 1)",
+                      borderWidth: 1,
                     },
-                    grid: { color: "rgba(255,255,255,0.1)" },
+                  ],
+                }}
+                options={{
+                  responsive: true,
+                  plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { label: (ctx) => `${ctx.raw}%` } },
+                    title: {
+                      display: true,
+                      text: "Porcentaje de citas por tatuador",
+                      color: "#fff",
+                    },
                   },
-                },
-              }}
-            />
-          </div>
+                  scales: {
+                    x: {
+                      ticks: { color: "#fff" },
+                      grid: { color: "rgba(255,255,255,0.1)" },
+                    },
+                    y: {
+                      beginAtZero: true,
+                      ticks: {
+                        color: "#fff",
+                        callback: (value) => `${value}%`,
+                      },
+                      grid: { color: "rgba(255,255,255,0.1)" },
+                    },
+                  },
+                }}
+              />
+            </div>
+          )}
         </>
       )}
     </div>
@@ -139,3 +145,4 @@ function Reporte() {
 }
 
 export default Reporte;
+

@@ -24,20 +24,29 @@ function Citas() {
   }, []);
 
   const cargarCitas = () => {
-    API.get("/api/citas")
-      .then((res) => setCitas(res.data))
+    API.get("/api/citas/") // 🔹 slash final
+      .then((res) => {
+        const data = res.data;
+        setCitas(Array.isArray(data) ? data : []);
+      })
       .catch((err) => console.error("Error cargando citas:", err));
   };
 
   const cargarClientes = () => {
-    API.get("/api/clientes")
-      .then((res) => setClientes(res.data))
+    API.get("/api/clientes/") // 🔹 slash final
+      .then((res) => {
+        const data = res.data;
+        setClientes(Array.isArray(data) ? data : []);
+      })
       .catch((err) => console.error("Error cargando clientes:", err));
   };
 
   const cargarTatuadores = () => {
-    API.get("/api/tatuadores")
-      .then((res) => setTatuadores(res.data))
+    API.get("/api/tatuadores/") // 🔹 slash final
+      .then((res) => {
+        const data = res.data;
+        setTatuadores(Array.isArray(data) ? data : []);
+      })
       .catch((err) => console.error("Error cargando tatuadores:", err));
   };
 
@@ -58,7 +67,7 @@ function Citas() {
         .catch((err) => console.error("Error actualizando cita:", err));
     } else {
       // 🔹 Create
-      API.post("/api/citas", formData)
+      API.post("/api/citas/", formData) // 🔹 slash final
         .then(() => {
           resetForm();
           cargarCitas();
@@ -147,11 +156,12 @@ function Citas() {
           required
         >
           <option value="">Seleccionar Cliente</option>
-          {clientes.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.nombre}
-            </option>
-          ))}
+          {Array.isArray(clientes) &&
+            clientes.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.nombre}
+              </option>
+            ))}
         </select>
 
         {/* Selección de tatuador */}
@@ -162,11 +172,12 @@ function Citas() {
           required
         >
           <option value="">Seleccionar Tatuador</option>
-          {tatuadores.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.nombre} ({t.estilo})
-            </option>
-          ))}
+          {Array.isArray(tatuadores) &&
+            tatuadores.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.nombre} ({t.estilo})
+              </option>
+            ))}
         </select>
 
         <button type="submit">
@@ -194,21 +205,27 @@ function Citas() {
           </tr>
         </thead>
         <tbody>
-          {citas.map((c) => (
-            <tr key={c.id}>
-              <td>{c.id}</td>
-              <td>{c.fecha}</td>
-              <td>{c.hora_inicio}</td>
-              <td>{c.hora_fin}</td>
-              <td>{c.descripcion}</td>
-              <td>{c.cliente?.nombre || c.cliente_id}</td>
-              <td>{c.tatuador?.nombre || c.tatuador_id}</td>
-              <td>
-                <button onClick={() => editarCita(c)}>Editar</button>
-                <button onClick={() => eliminarCita(c.id)}>Eliminar</button>
-              </td>
+          {Array.isArray(citas) && citas.length > 0 ? (
+            citas.map((c) => (
+              <tr key={c.id}>
+                <td>{c.id}</td>
+                <td>{c.fecha}</td>
+                <td>{c.hora_inicio}</td>
+                <td>{c.hora_fin}</td>
+                <td>{c.descripcion}</td>
+                <td>{c.cliente?.nombre || c.cliente_id}</td>
+                <td>{c.tatuador?.nombre || c.tatuador_id}</td>
+                <td>
+                  <button onClick={() => editarCita(c)}>Editar</button>
+                  <button onClick={() => eliminarCita(c.id)}>Eliminar</button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="8">No hay citas registradas</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
